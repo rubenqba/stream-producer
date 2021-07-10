@@ -1,0 +1,33 @@
+
+spring:
+  rabbitmq:
+    username: ${AMQP_USERNAME:guest}
+    password: ${AMQP_PASSWORD:guest}
+    host: ${AMQP_ENDPOINT:localhost}
+    port: ${AMQP_PORT:5672}
+  cloud:
+    stream:
+      rabbit:
+        default:
+          producer:
+            routing-key-expression: 'headers["type"]'
+        bindings:
+          counter-in-0:
+            consumer:
+              bindingRoutingKey: counter
+          ints-in-0:
+            consumer:
+              bindingRoutingKey: ints
+      bindings:
+        intGenerator-out-0:
+          destination: events
+        events-out-0:
+          destination: events
+        counter-in-0:
+          destination: events
+        ints-in-0:
+          destination: events
+      source: events
+
+    function:
+      definition: counter;ints
